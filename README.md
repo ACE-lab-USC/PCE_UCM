@@ -1,1 +1,154 @@
-Test
+# WRF-SLUCM Urban Morphology Uncertainty (UQ) Analysis
+
+This repository contains Jupyter notebooks and supporting datasets for evaluating **WRF-SLUCM** simulations and quantifying the impacts of **Urban Morphology Parameters (UMPs)** using **Polynomial Chaos Expansion (PCE)**, **Monte Carlo (MC) sampling**, and **Sobol sensitivity indices**. The workflows focus on (1) model evaluation against **AQS** observations, (2) spatial/temporal impacts of UMP perturbations, and (3) uncertainty/sensitivity analyses for meteorological variables and heat-stress indicators (HSIs).
+
+---
+
+## Repository Structure (Quick View)
+
+| Folder | Purpose | Key files |
+|---|---|---|
+| `Model_Evaluation/` | Evaluate WRF outputs using AQS observations | `Evaluation_*_AQS_Summer.ipynb` |
+| `Impact_of_UMPs/` | Compare WRF-SLUCM outputs across different UMP configurations | `Compare_*.ipynb` |
+| `Uncertainty_R2_Map/` | Map spatial uncertainty and PCE fit quality (R²) | `PCE_uncertainty_r2_map_Meteo_HSI.ipynb`, `Uncertainty_Map_Data_Meteo_and_HSI.zip` |
+| `SD_UMP_and_Physical_scheme/` | Standard deviation (SD) from UMPs and physical schemes | `PCE_Urban_nonUrban.ipynb`, `SD_UMPs.csv`, `SD_Physical_scheme.csv` |
+| `MC_Output_Distribution/` | Monte Carlo sampling & uncertainty distributions | `Sensitivity_Analysis.ipynb`, `Sampling_mean_summary.csv` |
+| `Meteo_Hourly_Uncertainty/` | Hourly (0–23) meteorology PCE modeling & uncertainty plots | `PCE_Hourly_Analysis.ipynb`, `WRF_Hourly_Data.zip` |
+| `Meteo_Sobol_Index/` | Sobol (first-order) plots for meteorology | `Sobol_Urban_Plots.ipynb`, `SD_UMPs.csv` |
+| `HSI_Hourly_Uncertainty/` | Hourly (0–23) HSIs PCE modeling & uncertainty plots | `PCE_HSI_hourly_plots.ipynb`, `HSI_Hourly_Input_Data.zip` |
+| `HSI_Sobol_Index/` | Sobol (first-order) plots for HSIs | `HSI_Sobol_Index_Plot.ipynb`, `PCE_stats_summer.csv` |
+| Root | Sampling design | `UMP_100sampling_input.csv` |
+
+---
+
+## Data & Notes
+
+Some notebooks require zipped input datasets. Please **unzip** them before running:
+- `Uncertainty_R2_Map/Uncertainty_Map_Data_Meteo_and_HSI.zip`
+- `Meteo_Hourly_Uncertainty/WRF_Hourly_Data.zip`
+- `HSI_Hourly_Uncertainty/HSI_Hourly_Input_Data.zip`
+
+> Important: paths and/or filenames may need to be updated inside the notebooks depending on your local directory structure and preprocessing outputs.
+
+---
+
+## Folder Details
+
+### 1) `Model_Evaluation/`
+Model evaluation against **AQS** observations (Summer case):
+- `Evaluation_AirTemp_AQS_Summer.ipynb`  
+  Evaluates model performance for **2-m air temperature (T2)** using AQS data.
+- `Evaluation_RelativeHumidity_AQS_Summer.ipynb`  
+  Evaluates model performance for **relative humidity** using AQS data.
+- `Evaluation_WindSpeed_AQS_Summer.ipynb`  
+  Evaluates model performance for **10-m wind speed** using AQS data.
+
+---
+
+### 2) `Impact_of_UMPs/`
+Quantifies how UMP perturbations affect WRF-SLUCM outputs:
+- `Compare_Spatial_bias.ipynb`  
+  Produces maps showing the **spatial distribution** of UMP impacts/bias.
+- `Compare_Stations.ipynb`  
+  Compares WRF-SLUCM performance at **AQS station locations** across UMP inputs.
+- `Compare_Time_series.ipynb`  
+  Compares **diurnal-cycle / time-series curves** across WRF-SLUCM configurations.
+
+---
+
+### 3) `Uncertainty_R2_Map/`
+Spatial uncertainty maps and PCE goodness-of-fit:
+- `PCE_uncertainty_r2_map_Meteo_HSI.ipynb`  
+  Computes spatial distributions of **uncertainty** and **PCE fit R²** for meteorological variables and HSIs.
+- `Uncertainty_Map_Data_Meteo_and_HSI.zip`  
+  Required input data for the notebook (you may need to modify filenames/paths after unzipping).
+
+---
+
+### 4) `SD_UMP_and_Physical_scheme/`
+Standard deviation analyses (UMP-induced vs. physical-scheme-induced):
+- `PCE_Urban_nonUrban.ipynb`  
+  Uses PCE to compute standard deviations for meteorological variables over **urban** and **non-urban** areas.
+- `SD_UMPs.csv`  
+  PCE-based **UMP-induced SD** for meteorological variables.
+- `SD_Physical_scheme.csv`  
+  Arithmetic SD across **24 physical parameterization schemes**.
+
+---
+
+### 5) `MC_Output_Distribution/`
+Monte Carlo sampling and output uncertainty distributions:
+- `Sampling_mean_summary.csv`  
+  Urban-average time-aggregated results for each sampling run; used as input to `Sensitivity_Analysis.ipynb`.
+- `Sensitivity_Analysis.ipynb`  
+  Performs MC-based sensitivity/uncertainty analysis and generates **histogram/distribution plots** of UMP-induced uncertainty.
+
+---
+
+### 6) `Meteo_Hourly_Uncertainty/`
+Hourly (0–23) PCE modeling for meteorological variables:
+- `WRF_Hourly_Data.zip`  
+  Hourly urban-average meteorology (0–23); input to `PCE_Hourly_Analysis.ipynb`.
+- `PCE_Hourly_Analysis.ipynb`  
+  Builds hourly PCE models and plots both **absolute values** and **uncertainty** by hour.
+
+---
+
+### 7) `Meteo_Sobol_Index/`
+Sobol sensitivity plots for meteorological variables:
+- `SD_UMPs.csv`  
+  Input file for plotting (generated by `SD_UMP_and_Physical_scheme/PCE_Urban_nonUrban.ipynb`).
+- `Sobol_Urban_Plots.ipynb`  
+  Generates plots of **first-order Sobol indices**.
+
+---
+
+### 8) `HSI_Hourly_Uncertainty/`
+Hourly (0–23) PCE modeling for heat-stress indicators:
+- `HSI_Hourly_Input_Data.zip`  
+  Urban-average values (0–23) for four HSIs; input to `PCE_HSI_hourly_plots.ipynb`.
+- `PCE_HSI_hourly_plots.ipynb`  
+  Builds hourly PCE models and plots both **absolute HSI values** and **uncertainty**.
+
+---
+
+### 9) `HSI_Sobol_Index/`
+Sobol sensitivity plots for heat-stress indicators:
+- `PCE_stats_summer.csv`  
+  PCE-derived model parameters and outputs for HSIs; used as input to the plotting notebook.
+- `HSI_Sobol_Index_Plot.ipynb`  
+  Plots **first-order Sobol indices** for four HSIs.
+
+---
+
+## Sampling Design
+
+- `UMP_100sampling_input.csv` (root)  
+  **100 UMP samples** generated using **Latin Hypercube Sampling (LHS)**.
+
+---
+
+## Suggested Run Order (Typical)
+
+1. Unzip required datasets in each folder (see **Data & Notes**).
+2. Run `SD_UMP_and_Physical_scheme/PCE_Urban_nonUrban.ipynb` to generate/update `SD_UMPs.csv` (used by Sobol plotting).
+3. Run evaluation notebooks in `Model_Evaluation/` (optional but recommended).
+4. Run impact comparison notebooks in `Impact_of_UMPs/`.
+5. Run uncertainty mapping in `Uncertainty_R2_Map/`.
+6. Run hourly analyses in `Meteo_Hourly_Uncertainty/` and `HSI_Hourly_Uncertainty/`.
+7. Generate Sobol plots in `Meteo_Sobol_Index/` and `HSI_Sobol_Index/`.
+8. Run MC distribution analysis in `MC_Output_Distribution/` if needed for distribution-style summaries.
+
+---
+
+## Environment
+
+These notebooks typically require a scientific Python stack, e.g.:
+`numpy`, `pandas`, `matplotlib`, `scipy`, `xarray`, `netCDF4`, `scikit-learn`  
+(plus any project-specific utilities used in your workflow).
+
+---
+
+## Contact / Notes
+
+If you encounter path issues, update the path variables at the top of each notebook after unzipping the required data files.
